@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="MemberRepository">
+
+    <select id="getMemberList" resultType="com.example.demo.member.data.dto.UserDto">
+        SELECT
+        ... 생략 ...
+        FROM  users a
+        LEFT JOIN common_code b
+        ON b.grp_cd = 'ISTT_AUTH_CD'
+        AND a.usr_auth_cd = b.dtl_cd
+        AND b.dtl_use_yn = 'Y'
+        LEFT JOIN institute c
+        ON a.dongri_cd = c.dongri_cd
+        WHERE 1=1
+        <if test="usrAuthGubunCd != null and usrAuthGubunCd != ''">
+            AND a.usr_auth_cd = #{usrAuthGubunCd}
+        </if>
+        <if test="sigunguCd != null and sigunguCd != ''">
+            AND c.sigungu_cd = #{sigunguCd}
+        </if>
+        <if test="eupmyeondongCd != null and eupmyeondongCd != ''">
+            AND c.eupmyeondong_cd = #{eupmyeondongCd}
+        </if>
+        <if test="dongriCd != null and dongriCd != ''">
+            AND a.dongri_cd = #{dongriCd}
+        </if>
+        <if test="usrUseYn != null and usrUseYn != ''">
+            AND a.usr_use_yn = #{usrUseYn}
+        </if>
+        <if test="searchName != null and searchName != ''">
+            AND (
+                   UPPER(a.usr_id)      LIKE UPPER(CONCAT('%', #{searchName}, '%'))
+                OR UPPER(a.usr_name)    LIKE UPPER(CONCAT('%', #{searchName}, '%'))
+            )
+        </if>
+        <choose>
+            <when test="usrAuthCd == 'ADM' or (usrAuthCd == 'A00' and usrChrgTypeCd == 'C20')">
+                AND c.dongri_cd LIKE '%%'
+            </when>
+            <when test="usrAuthCd == 'A00' and usrChrgTypeCd == 'C10'">
+                AND (c.sigungu_cd = #{usrDongriCd} OR c.eupmyeondong_cd = #{usrDongriCd} OR c.dongri_cd = #{usrDongriCd})
+            </when>
+            <when test="usrAuthCd == 'B00'">
+                AND (c.eupmyeondong_cd = #{usrDongriCd} OR c.dongri_cd = #{usrDongriCd})
+            </when>
+            <when test="usrAuthCd == 'C00'">
+                AND (c.sigungu_cd = #{usrDongriCd} OR c.eupmyeondong_cd = #{usrDongriCd} OR c.dongri_cd = #{usrDongriCd})
+            </when>
+            <otherwise>
+                AND c.dongri_cd = NULL
+            </otherwise>
+        </choose>
+        ORDER BY  a.dongri_cd
+                , a.role
+                , a.usr_name
+    </select>
+</mapper>
