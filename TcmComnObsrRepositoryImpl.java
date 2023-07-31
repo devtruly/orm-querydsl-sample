@@ -1,4 +1,4 @@
-package com.satech.ndms.comnmng.log.repository;
+package com.example.demo.comnmng.log.repository;
 
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Projections;
@@ -14,7 +14,7 @@ import javax.persistence.EntityManager;
 import java.util.List;
 
 @Slf4j
-public class TcmComnObsrRepositoryImpl2 implements TcmComnObsrRepositoryCustom {
+public class TcmComnObsrRepositoryImpl implements TcmComnObsrRepositoryCustom {
     private final EntityManager em;
     private final JPAQueryFactory queryFactory;
     private final QTcmComnObsr qTcmComnObsr;
