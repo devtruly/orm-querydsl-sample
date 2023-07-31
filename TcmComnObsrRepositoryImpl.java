@@ -18,7 +18,7 @@ public class TcmComnObsrRepositoryImpl implements TcmComnObsrRepositoryCustom {
     private final EntityManager em;
     private final JPAQueryFactory queryFactory;
     private final QTcmComnObsr qTcmComnObsr;
-
+    // querydsl
     public TcmComnObsrRepositoryImpl2(EntityManager em) {
         this.em = em;
         this.queryFactory = new JPAQueryFactory(em);
