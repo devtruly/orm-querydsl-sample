@@ -43,7 +43,7 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
 
         qb.append("select b_no, bc_code, ref, step, depth, b_title, b_content, b_writer, b_password, b_reply_cnt, b_comment_cnt, b_read_cnt, b_is_notice, b_is_secret, b_is_deleted, a_no, m_no, b_mod_ip, b_mod_dt, b_reg_dt from (" +
                 "    select b_no, concat('notice_', bc_code) as bc_code, ref, step, depth, b_title, b_content, b_writer, b_password, b_reply_cnt, b_comment_cnt, b_read_cnt, b_is_notice, b_is_secret, b_is_deleted, a_no, m_no, b_mod_ip, b_mod_dt, b_reg_dt, 'y' as noti_flag from pja_board where b_is_notice = 'y' and b_is_deleted = 'n'" + noticeBcCode.toString() +
-                "  union all" +
+                "  union" +
                 "    select b_no, bc_code, ref, step, depth, b_title, b_content, b_writer, b_password, b_reply_cnt, b_comment_cnt, b_read_cnt, b_is_notice, b_is_secret, b_is_deleted, a_no, m_no, b_mod_ip, b_mod_dt, b_reg_dt, 'n' as noti_flag from pja_board where " + where +
                 ") e ");
 
@@ -82,7 +82,7 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
     public int getTotalSearchCnt(String where) {
         Query nativeQuery = em.createNativeQuery("select count(b_no) from (" +
                         "    select b_no from pja_board where b_is_notice = 'y' and b_is_deleted = 'n'" +
-                        "  union all" +
+                        "  union" +
                         "    select b_no from pja_board where " + where +
                         ") e ");
 
